@@ -25,13 +25,36 @@ print("Raw digit image saved!")
 
 # Build neural network
 model = tf.keras.models.Sequential([
-    
-    # Flatten 28x28 image into 784 values
-    tf.keras.layers.Flatten(input_shape=(28, 28)),
-    
-    # Hidden layer
-    tf.keras.layers.Dense(128, activation='relu'),
-    
+
+    # Add channel dimension
+    tf.keras.layers.Reshape((28, 28, 1), input_shape=(28, 28)),
+
+    # First convolution layer
+    tf.keras.layers.Conv2D(
+        32,
+        (3, 3),
+        activation='relu'
+    ),
+
+    # Pooling layer
+    tf.keras.layers.MaxPooling2D((2, 2)),
+
+    # Second convolution layer
+    tf.keras.layers.Conv2D(
+        64,
+        (3, 3),
+        activation='relu'
+    ),
+
+    # Second pooling
+    tf.keras.layers.MaxPooling2D((2, 2)),
+
+    # Flatten for dense layer
+    tf.keras.layers.Flatten(),
+
+    # Dense layer
+    tf.keras.layers.Dense(64, activation='relu'),
+
     # Output layer
     tf.keras.layers.Dense(10, activation='softmax')
 ])
