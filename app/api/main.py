@@ -1,10 +1,13 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 from io import BytesIO
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="app/frontend"), name="static")
 
 # Load trained model once
 model = tf.keras.models.load_model(
@@ -18,6 +21,10 @@ def home():
     return {
         "message": "Digit OCR API Running"
     }
+
+@app.get("/app")
+def serve_frontend():
+    return FileResponse("app/frontend/index.html")
 
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
