@@ -1,6 +1,8 @@
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 import matplotlib.pyplot as plt
+from PIL import Image
+import numpy as np
 
 # Load dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
@@ -11,6 +13,15 @@ print("Training labels shape:", y_train.shape)
 # Normalize
 x_train = x_train / 255.0
 x_test = x_test / 255.0
+
+# Save raw digit image properly
+raw_image = (x_train[0] * 255).astype(np.uint8)
+
+pil_image = Image.fromarray(raw_image)
+
+pil_image.save("outputs/raw_digit.png")
+
+print("Raw digit image saved!")
 
 # Build neural network
 model = tf.keras.models.Sequential([
