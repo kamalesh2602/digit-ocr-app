@@ -1,45 +1,41 @@
 import tensorflow as tf
 from tensorflow.keras.datasets import mnist
 import matplotlib.pyplot as plt
-import os
-# Create output directory if it doesn't exist
-os.makedirs("outputs", exist_ok=True)
+
 # Load dataset
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 
 print("Training images shape:", x_train.shape)
 print("Training labels shape:", y_train.shape)
 
-print("\nBefore normalization:")
-print("Min pixel value:", x_train[0].min())
-print("Max pixel value:", x_train[0].max())
-
-# Normalize dataset
+# Normalize
 x_train = x_train / 255.0
 x_test = x_test / 255.0
 
-print("\nAfter normalization:")
-print("Min pixel value:", x_train[0].min())
-print("Max pixel value:", x_train[0].max())
+# Build neural network
+model = tf.keras.models.Sequential([
+    
+    # Flatten 28x28 image into 784 values
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    
+    # Hidden layer
+    tf.keras.layers.Dense(128, activation='relu'),
+    
+    # Output layer
+    tf.keras.layers.Dense(10, activation='softmax')
+])
 
-# Display first image
-plt.imshow(x_train[0], cmap="gray")
-
-# Show title
-plt.title(f"Label: {y_train[0]}")
-
-# Remove axis numbers
-plt.axis("off")
-
-# Save image
-plt.tight_layout()
-
-plt.savefig(
-    "outputs/digit.png",
-    format="png",
-    dpi=300
+# Compile model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
 )
 
-plt.close()
+# Train model
+model.fit(x_train, y_train, epochs=5)
 
-print("Image saved as digit.png")
+# Evaluate model
+test_loss, test_accuracy = model.evaluate(x_test, y_test)
+
+print("\nTest Accuracy:", test_accuracy)
