@@ -40,6 +40,6 @@ test_loss, test_accuracy = model.evaluate(x_test, y_test)
 
 print("\nTest Accuracy:", test_accuracy)
 
-model.save("app/model/mnist_model.keras")
+model.save("outputs/mnist_model.keras")
 
 print("Model saved successfully!")
